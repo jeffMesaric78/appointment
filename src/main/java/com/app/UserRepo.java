@@ -9,7 +9,7 @@ import org.springframework.data.repository.CrudRepository;
 //@EnableMongoRepositories
 public interface UserRepo extends CrudRepository<Patient, String> {
 
-	String findByEmail(String email);
+	Patient findByEmail(String email);
 
 	Patient findByEmailAndPassword(String email, String password);
 

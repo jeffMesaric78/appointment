@@ -34,6 +34,10 @@ public class AppointmentService {
 	 * @return true if the user account is successfully created, false otherwise.
 	 */
 	public boolean createUserAccount(Patient patient) {
+
+		System.out.println("num records: "+userRepo.count());
+		patient.setId(String.valueOf(userRepo.count()+1));
+
 		if (userRepo.save(patient) != null) {
 			return true;
 		} else
@@ -46,8 +50,17 @@ public class AppointmentService {
 	 * @return true if the user is found.
 	 */
 	public boolean findByUserEmail(String email) {
-		userRepo.findByEmail(email);
-		return true;
+		System.out.println("email: "+email);
+		Patient p = userRepo.findByEmail(email);
+		if (p != null) {
+			System.out.println("p: " + p);
+			return true;
+		}
+		else {
+			System.out.println("p null");
+			return false;
+		}
+
 	}
 
 	/**

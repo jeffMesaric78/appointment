@@ -89,8 +89,16 @@ public class AppointmentController {
 	 */
 	@PostMapping("/user/create")
 	public String getPostUser(Model model, @ModelAttribute Patient patient) {
+
+		System.out.println("entry..");
+		System.out.println(patient);
+
 		boolean result = service.findByUserEmail(patient.getEmail());
+
+		System.out.println("result: "+result);
+
 		if (result) {
+			System.out.println("test");
 			model.addAttribute("exist", "This " + patient.getEmail() + " Already Exist");
 		} else if (service.createUserAccount(patient)) {
 			model.addAttribute("success", "Your User Account created");
@@ -99,6 +107,40 @@ public class AppointmentController {
 		}
 		return "register";
 	}
+
+
+	////use RequestBody for json, ModelAttribute for form data
+	@PostMapping("/user/create2")
+	public String getPostUser(@RequestBody Patient patient) {
+
+		System.out.println("entry..");
+		System.out.println(patient);
+
+		boolean result = service.findByUserEmail(patient.getEmail());
+
+		System.out.println("result: "+result);
+		String ret = "";
+
+		if (result) {
+			System.out.println("test");
+			//model.addAttribute("exist", "This " + patient.getEmail() + " Already Exist");
+			ret = "This " + patient.getEmail() + " already exists";
+		} else if (service.createUserAccount(patient)) {
+			//model.addAttribute("success", "Your User Account created");
+			ret = "success, user account created";
+		} else {
+			//model.addAttribute("error", "Your User Account creationed Failed");
+			ret = "error, user creation failed";
+		}
+		//return "register";
+		return ret;
+	}
+
+
+
+
+
+
 
 	/**
 	 * Handles GET requests for the user login page.
