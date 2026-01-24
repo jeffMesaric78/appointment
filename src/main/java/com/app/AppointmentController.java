@@ -3,11 +3,13 @@ package com.app;
 import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
+//@RestController
+@Controller
 @Slf4j
 @Transactional
 public class AppointmentController {
@@ -26,24 +28,23 @@ public class AppointmentController {
         this.userRepo = userRepo;
     }
 
-    @PostMapping("/test")
-	public String test(@RequestBody Patient patient) {
-		log.info("hit test get endpoint...");
 
-		userRepo.save(patient);
-
-		return "hello";
-	}
 	
 	/**
 	 * Handles GET requests for the home page.
 	 * @param model The model to pass attributes to the view.
 	 * @return The name of the home view.
 	 */
-	@GetMapping("/")
+	/*@GetMapping("/")
 	public String getIndexPage(Model model) {
 		return "home";
+	}*/
+
+	@RequestMapping("/")
+	public String index () {
+		return "home";
 	}
+
 
 	/**
 	 * Handles GET requests for the appointment page.
@@ -73,69 +74,40 @@ public class AppointmentController {
 	/**
 	 * Handles GET requests for the user registration page.
 	 * @param model The model to pass attributes to the view.
-	 * @param patient The user model attribute.
+	 * @param user The user model attribute.
 	 * @return The name of the register view.
 	 */
-	@GetMapping("/user/create")
-	public String getUserCreate(Model model, @ModelAttribute Patient patient) {
+	@GetMapping("/patient/create")
+	public String getUserCreate(Model model, @ModelAttribute User user) {
 		return "register";
 	}
 
 	/**
 	 * Handles POST requests for user registration.
 	 * @param model The model to pass attributes to the view.
-	 * @param patient The user model attribute.
+	 * @param user The user model attribute.
 	 * @return The name of the register view.
 	 */
-	@PostMapping("/user/create")
-	public String getPostUser(Model model, @ModelAttribute Patient patient) {
+	@PostMapping("/patient/create")
+	public String getPostUser(Model model, @ModelAttribute User user) {
 
 		System.out.println("entry..");
-		System.out.println(patient);
+		System.out.println(user);
 
-		boolean result = service.findByUserEmail(patient.getEmail());
+		boolean result = service.findByUserEmail(user.getEmail());
 
 		System.out.println("result: "+result);
 
 		if (result) {
 			System.out.println("test");
-			model.addAttribute("exist", "This " + patient.getEmail() + " Already Exist");
-		} else if (service.createUserAccount(patient)) {
+			model.addAttribute("exist", "This " + user.getEmail() + " Already Exist");
+		} else if (service.createUserAccount(user)) {
 			model.addAttribute("success", "Your User Account created");
 		} else {
 			model.addAttribute("error", "Your User Account creationed Failed");
 		}
 		return "register";
 	}
-
-
-	////use RequestBody for json, ModelAttribute for form data
-	@PostMapping("/user/create2")
-	public String getPostUser(@RequestBody Patient patient) {
-
-		System.out.println("entry..");
-		System.out.println(patient);
-
-		boolean result = service.findByUserEmail(patient.getEmail());
-
-		System.out.println("result: "+result);
-		String ret = "";
-
-		if (result) {
-			System.out.println("test");
-			//model.addAttribute("exist", "This " + patient.getEmail() + " Already Exist");
-			ret = "This " + patient.getEmail() + " already exists";
-		} else if (service.createUserAccount(patient)) {
-			//model.addAttribute("success", "Your User Account created");
-			ret = "success, user account created";
-		} else {
-			//model.addAttribute("error", "Your User Account creationed Failed");
-			ret = "error, user creation failed";
-		}
-		//return "register";
-		return ret;
-	}
-
 
 
 
@@ -146,7 +118,7 @@ public class AppointmentController {
 	 * Handles GET requests for the user login page.
 	 * @return The name of the user login view.
 	 */
-	@GetMapping("/user/login")
+	@GetMapping("/patient/login")
 	public String getUserLogin() {
 		return "userlogin";
 	}
@@ -154,12 +126,12 @@ public class AppointmentController {
 	/**
 	 * Handles POST requests for user login.
 	 * @param model The model to pass attributes to the view.
-	 * @param patient The user model attribute.
+	 * @param user The user model attribute.
 	 * @return A redirection to the appointment page if login is successful, otherwise the user login view.
 	 */
-	@PostMapping("/user/login")
-	public String postUserLogin(Model model, @ModelAttribute Patient patient) {
-		boolean loginstatus = service.userLogin(patient.getEmail(), patient.getPassword());
+	@PostMapping("/patient/login")
+	public String postUserLogin(Model model, @ModelAttribute User user) {
+		boolean loginstatus = service.userLogin(user.getEmail(), user.getPassword());
 		if (loginstatus) {
 			return "redirect:/appointment";
 		} else {

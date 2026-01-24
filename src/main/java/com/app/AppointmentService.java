@@ -30,15 +30,15 @@ public class AppointmentService {
 
     /**
 	 * Creates a new user account.
-	 * @param patient The user object containing user details.
+	 * @param user The user object containing user details.
 	 * @return true if the user account is successfully created, false otherwise.
 	 */
-	public boolean createUserAccount(Patient patient) {
+	public boolean createUserAccount(User user) {
 
-		System.out.println("num records: "+userRepo.count());
-		patient.setId(String.valueOf(userRepo.count()+1));
+		System.out.println("num records: "+ userRepo.count());
+		user.setId(String.valueOf(userRepo.count()+1));
 
-		if (userRepo.save(patient) != null) {
+		if (userRepo.save(user) != null) {
 			return true;
 		} else
 			return false;
@@ -51,7 +51,7 @@ public class AppointmentService {
 	 */
 	public boolean findByUserEmail(String email) {
 		System.out.println("email: "+email);
-		Patient p = userRepo.findByEmail(email);
+		User p = userRepo.findByEmail(email);
 		if (p != null) {
 			System.out.println("p: " + p);
 			return true;
@@ -72,6 +72,11 @@ public class AppointmentService {
 	public boolean userLogin(String email, String password) {
 		return userRepo.findByEmailAndPassword(email, password) != null;
 	}
+
+	public boolean userLogin2(String username) {
+		return userRepo.seeIfUserExists(username) != null;
+	}
+
 
 	/**
 	 * Authenticates an admin based on email and password.

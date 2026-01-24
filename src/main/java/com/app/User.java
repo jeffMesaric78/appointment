@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 //@Document(collection = "users")
-public class Patient {
+public class User {
 	@Id
 	private String id;
 	private String username;
