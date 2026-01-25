@@ -1,4 +1,4 @@
-package com.app;
+package com.app.entity;
 
 import jakarta.persistence.Entity;
 //import org.springframework.data.mongodb.core.mapping.Document;

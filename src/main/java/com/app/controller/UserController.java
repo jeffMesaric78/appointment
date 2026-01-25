@@ -1,5 +1,10 @@
-package com.app;
+package com.app.controller;
 
+import com.app.entity.UserAccount;
+import com.app.repo.AppointmentRepo;
+import com.app.repo.UserRepo;
+import com.app.service.JwtService;
+import com.app.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
@@ -12,47 +17,38 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @Transactional
 @CrossOrigin(origins = "http://localhost:5173") // Specify the exact origin of your frontend
-public class AuthenticationController {
+public class UserController {
 
 	private final JwtService jwtService;
 
-	//@Autowired
-	private final AppointmentService service;
 
 	//@Autowired
-	private final AppointmentRepo repo;
+	private final UserService userService;
 
-	private final UserRepo userRepo;
+	//@Autowired
+	//private final AppointmentRepo repo;
 
-    public AuthenticationController(JwtService jwtService,
-									AppointmentService service,
-                                    AppointmentRepo repo,
-                                    UserRepo userRepo) {
+	//private final UserRepo userRepo;
+
+    public UserController(JwtService jwtService,
+						  UserService service,
+						  AppointmentRepo repo,
+						  UserRepo userRepo) {
         this.jwtService = jwtService;
-        this.service = service;
-        this.repo = repo;
-        this.userRepo = userRepo;
+        this.userService = service;
+        //this.repo = repo;
+        //this.userRepo = userRepo;
     }
-
-    @PostMapping("/test")
-	public String test(@RequestBody User user) {
-		log.info("hit test get endpoint...");
-
-		userRepo.save(user);
-
-		return "hello";
-	}
-
 
 
 	////use RequestBody for json, ModelAttribute for form data
 	@PostMapping("/user/create")
-	public String createUser(@RequestBody User user) {
+	public String createUser(@RequestBody UserAccount userAccount) {
 
 		System.out.println("entry..");
-		System.out.println(user);
+		System.out.println(userAccount);
 
-		boolean result = service.findByUserEmail(user.getEmail());
+		boolean result = userService.findByUserEmail(userAccount.getEmail());
 
 		System.out.println("result: "+result);
 		String ret = "";
@@ -60,8 +56,8 @@ public class AuthenticationController {
 		if (result) {
 			System.out.println("test");
 			//model.addAttribute("exist", "This " + patient.getEmail() + " Already Exist");
-			ret = "This " + user.getEmail() + " already exists";
-		} else if (service.createUserAccount(user)) {
+			ret = "This " + userAccount.getEmail() + " already exists";
+		} else if (userService.createUserAccount(userAccount)) {
 			//model.addAttribute("success", "Your User Account created");
 			ret = "success, user account created";
 		} else {
@@ -75,7 +71,7 @@ public class AuthenticationController {
 
 	@GetMapping("/user/login")
 	public ResponseEntity<String> userLogin(@RequestParam("username") String username) {
-		boolean loginstatus = service.userLogin2(username);
+		boolean loginstatus = userService.userLogin(username);
 		System.out.println("login status: "+loginstatus);
 
 		ObjectMapper mapper = new ObjectMapper();

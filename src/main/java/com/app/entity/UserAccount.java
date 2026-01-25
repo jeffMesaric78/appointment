@@ -1,9 +1,8 @@
-package com.app;
+package com.app.entity;
 
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 //import org.springframework.data.mongodb.core.mapping.Document;
 
-import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,9 +12,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 //@Document(collection = "users")
-public class User {
+public class UserAccount {
 	@Id
-	private String id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY) // Configures auto-increment
+	//@Column(name = "id", updatable = false, nullable = false)
+	private Integer id;
+
 	private String username;
 	private String email;
 	private String password;

@@ -1,7 +1,13 @@
-package com.app;
+package com.app.controller;
 
 import java.util.List;
 
+import com.app.entity.Admin;
+import com.app.entity.Appointment;
+import com.app.entity.UserAccount;
+import com.app.repo.AppointmentRepo;
+import com.app.repo.UserRepo;
+import com.app.service.AppointmentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -74,34 +80,34 @@ public class AppointmentController {
 	/**
 	 * Handles GET requests for the user registration page.
 	 * @param model The model to pass attributes to the view.
-	 * @param user The user model attribute.
+	 * @param userAccount The user model attribute.
 	 * @return The name of the register view.
 	 */
 	@GetMapping("/patient/create")
-	public String getUserCreate(Model model, @ModelAttribute User user) {
+	public String getUserCreate(Model model, @ModelAttribute UserAccount userAccount) {
 		return "register";
 	}
 
 	/**
 	 * Handles POST requests for user registration.
 	 * @param model The model to pass attributes to the view.
-	 * @param user The user model attribute.
+	 * @param userAccount The user model attribute.
 	 * @return The name of the register view.
 	 */
 	@PostMapping("/patient/create")
-	public String getPostUser(Model model, @ModelAttribute User user) {
+	public String getPostUser(Model model, @ModelAttribute UserAccount userAccount) {
 
 		System.out.println("entry..");
-		System.out.println(user);
+		System.out.println(userAccount);
 
-		boolean result = service.findByUserEmail(user.getEmail());
+		boolean result = service.findByUserEmail(userAccount.getEmail());
 
 		System.out.println("result: "+result);
 
 		if (result) {
 			System.out.println("test");
-			model.addAttribute("exist", "This " + user.getEmail() + " Already Exist");
-		} else if (service.createUserAccount(user)) {
+			model.addAttribute("exist", "This " + userAccount.getEmail() + " Already Exist");
+		} else if (service.createUserAccount(userAccount)) {
 			model.addAttribute("success", "Your User Account created");
 		} else {
 			model.addAttribute("error", "Your User Account creationed Failed");
@@ -126,12 +132,12 @@ public class AppointmentController {
 	/**
 	 * Handles POST requests for user login.
 	 * @param model The model to pass attributes to the view.
-	 * @param user The user model attribute.
+	 * @param userAccount The user model attribute.
 	 * @return A redirection to the appointment page if login is successful, otherwise the user login view.
 	 */
 	@PostMapping("/patient/login")
-	public String postUserLogin(Model model, @ModelAttribute User user) {
-		boolean loginstatus = service.userLogin(user.getEmail(), user.getPassword());
+	public String postUserLogin(Model model, @ModelAttribute UserAccount userAccount) {
+		boolean loginstatus = service.userLogin(userAccount.getEmail(), userAccount.getPassword());
 		if (loginstatus) {
 			return "redirect:/appointment";
 		} else {

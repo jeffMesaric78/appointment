@@ -1,4 +1,4 @@
-package com.app;
+package com.app.service;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;

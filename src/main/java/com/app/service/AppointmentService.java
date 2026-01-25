@@ -1,9 +1,14 @@
-package com.app;
+package com.app.service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.app.entity.Appointment;
+import com.app.entity.UserAccount;
+import com.app.repo.AdminRepo;
+import com.app.repo.AppointmentRepo;
+import com.app.repo.UserRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,19 +35,17 @@ public class AppointmentService {
 
     /**
 	 * Creates a new user account.
-	 * @param user The user object containing user details.
+	 * @param userAccount The user object containing user details.
 	 * @return true if the user account is successfully created, false otherwise.
 	 */
-	public boolean createUserAccount(User user) {
+	public boolean createUserAccount(UserAccount userAccount) {
 
-		System.out.println("num records: "+ userRepo.count());
-		user.setId(String.valueOf(userRepo.count()+1));
+		//System.out.println("num records: "+ userRepo.count());
+		//userAccount.setId(String.valueOf(userRepo.count()+1));
 
-		if (userRepo.save(user) != null) {
-			return true;
-		} else
-			return false;
-	}
+        userRepo.save(userAccount);
+        return true;
+    }
 
 	/**
 	 * Finds a user by their email.
@@ -51,7 +54,7 @@ public class AppointmentService {
 	 */
 	public boolean findByUserEmail(String email) {
 		System.out.println("email: "+email);
-		User p = userRepo.findByEmail(email);
+		UserAccount p = userRepo.findByEmail(email);
 		if (p != null) {
 			System.out.println("p: " + p);
 			return true;
@@ -72,11 +75,6 @@ public class AppointmentService {
 	public boolean userLogin(String email, String password) {
 		return userRepo.findByEmailAndPassword(email, password) != null;
 	}
-
-	public boolean userLogin2(String username) {
-		return userRepo.seeIfUserExists(username) != null;
-	}
-
 
 	/**
 	 * Authenticates an admin based on email and password.
